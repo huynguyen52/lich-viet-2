@@ -1,8 +1,13 @@
-import React, { useCallback, useState, useMemo, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
-import { addEvent, changeEvent } from '../redux/actions/eventActions';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  addDailyEvent,
+  changeSelectedDate,
+  updateDailyEvent,
+} from '../redux/actions/eventActions';
+import { formatDate2, formatTime, INITIAL_DATE, randstr } from '../utils';
 import { getSolarDateEvent } from '../utils/solarHoliday';
-import { useSelector, useDispatch } from 'react-redux';
 
 LocaleConfig.locales['vi'] = {
   monthNames: [
@@ -39,8 +44,6 @@ LocaleConfig.locales['vi'] = {
 };
 LocaleConfig.defaultLocale = 'vi';
 
-const INITIAL_DATE = formatDate(new Date());
-
 const COLOR_LIST = [
   '#E45826',
   '#00FFDD',
@@ -52,13 +55,13 @@ const COLOR_LIST = [
 ];
 
 function CalendarComponent() {
-  const [selectedDate, setSelectedDate] = useState(INITIAL_DATE);
-
+  const selectedDate = useSelector((state: any) => state.event.selectedDate);
   const dispatch = useDispatch();
+  const eventList = useSelector((state: any) => state.event.eventList);
 
   useEffect(() => {
     dispatch(
-      changeEvent([
+      updateDailyEvent([
         {
           id: 1,
           color: 'red',
@@ -69,20 +72,21 @@ function CalendarComponent() {
     );
   }, []);
 
-  const onDayPress = useCallback((day) => {
-    setSelectedDate(day.dateString);
-    const dateSelected = getSolarDateEvent(`${day.day}-${day.month}`);
-
-    dispatch(
-      changeEvent([
-        {
-          id: 1,
-          color: COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)],
-          title: `${day.day}/${day.month}`,
-          time: 'cả ngày',
-        },
-      ])
+  useEffect(() => {
+    const dateSelected = getSolarDateEvent(
+      `${selectedDate.day}-${selectedDate.month}`
     );
+
+    //Show ngày click
+    const dailyEvent = [
+      {
+        id: randstr(),
+        color: COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)],
+        title: `${selectedDate.day}/${selectedDate.month}`,
+        time: 'cả ngày',
+      },
+    ];
+    dispatch(updateDailyEvent(dailyEvent));
 
     //Trả về ngày lễ dương lịch trong năm nếu có,
     if (dateSelected) {
@@ -92,13 +96,42 @@ function CalendarComponent() {
         title: dateSelected,
         time: 'cả ngày',
       };
-      dispatch(addEvent(newEvent));
+      dispatch(addDailyEvent([newEvent]));
     }
-  }, []);
+
+    //Get events from state.event.eventList
+    const newDailyEvent = eventList
+      .filter((e: any) => {
+        const today = new Date(selectedDate.timestamp);
+        const startDate = e.time.startDate.getTime();
+        const endDate = e.time.endDate.getTime();
+        return today >= startDate && today <= endDate;
+      })
+      .map((e: any) => {
+        const startTime = e.time.startTime;
+        const endTime = e.time.endTime;
+        return {
+          id: e.id,
+          color: COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)],
+          title: e.title,
+          // time: `${formatTime(startTime)}-${formatTime(endTime)}`,
+          time: `${
+            startTime && endTime
+              ? `${formatTime(startTime)}-${formatTime(endTime)}`
+              : 'Cả ngày'
+          }`,
+        };
+      });
+    dispatch(addDailyEvent(newDailyEvent));
+  }, [selectedDate, eventList]);
+
+  const onDayPress = (day: any) => {
+    dispatch(changeSelectedDate(day));
+  };
 
   const marked = useMemo(() => {
     return {
-      [selectedDate]: {
+      [selectedDate.dateString]: {
         selected: true,
         disableTouchEvent: true,
         selectedColor: 'red',
@@ -114,28 +147,6 @@ function CalendarComponent() {
       markedDates={marked}
     />
   );
-}
-
-function padTo2Digits(num: any) {
-  return num.toString().padStart(2, '0');
-}
-
-function formatDate(date: any) {
-  return [
-    date.getFullYear(),
-    padTo2Digits(date.getMonth() + 1),
-    padTo2Digits(date.getDate()),
-  ].join('-');
-}
-
-function formatDate2(date: any) {
-  return [padTo2Digits(date.getMonth() + 1), padTo2Digits(date.getDate())].join(
-    '/'
-  );
-}
-
-function randstr() {
-  return Math.random().toString(36).replace('0.', '');
 }
 
 export default CalendarComponent;

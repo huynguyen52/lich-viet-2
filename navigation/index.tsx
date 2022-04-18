@@ -9,8 +9,14 @@ import ModalScreen from '../screens/Modal';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Pressable, Text } from 'react-native';
+import { Pressable, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
+import { addEventForm, updateEvent } from '../redux/actions/eventActions';
+import { randstr } from '../utils';
+import EventDetail from '../screens/EventDetail';
+import { db } from '../firebase';
+import { doc, updateDoc } from 'firebase/firestore/lite';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<any>();
@@ -24,6 +30,21 @@ export default function Navigation() {
 }
 
 function RootNavigator() {
+  const dispatch = useDispatch();
+  const formValue = useSelector((state: any) => state.event.formValue);
+  const selectedDate = useSelector((state: any) => state.event.selectedDate);
+  const eventList = useSelector((state: any) => state.event.eventList);
+
+  const handleAddEventForm = (goBack: any) => {
+    formValue && dispatch(addEventForm({ id: randstr(), ...formValue }));
+    goBack();
+  };
+
+  const handleUpdateEventForm = async (navigation: any) => {
+    formValue && dispatch(updateEvent(formValue));
+    navigation.navigate('Home');
+  };
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -35,6 +56,42 @@ function RootNavigator() {
         name="NotFound"
         component={NotFoundScreen}
         options={{ title: 'Oops!' }}
+      />
+      <Stack.Screen
+        name="EventDetail"
+        component={EventDetail}
+        options={({ navigation, route }) => {
+          const { goBack } = navigation;
+          return {
+            title: 'Chi tiết sự kiện',
+            headerLeft: () => (
+              <TouchableOpacity
+                style={{ ...styles.headerLeft, marginLeft: -18 }}
+                onPress={goBack}
+              >
+                <MaterialCommunityIcons
+                  name="chevron-left"
+                  color={'red'}
+                  size={28}
+                />
+                <Text style={styles.headerText}>
+                  {'Tháng ' + selectedDate.month}
+                </Text>
+              </TouchableOpacity>
+            ),
+            headerRight: () => (
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate('EditEvent', {
+                    event: route.params?.event,
+                  })
+                }
+              >
+                <Text style={styles.headerText}>Sửa</Text>
+              </TouchableOpacity>
+            ),
+          };
+        }}
       />
       <Stack.Group screenOptions={{ presentation: 'modal' }}>
         <Stack.Screen
@@ -55,11 +112,43 @@ function RootNavigator() {
                 </TouchableOpacity>
               ),
               headerRight: () => (
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => handleAddEventForm(goBack)}>
                   <Text
                     style={{ color: 'red', fontSize: 18, fontWeight: '400' }}
                   >
                     Thêm
+                  </Text>
+                </TouchableOpacity>
+              ),
+            };
+          }}
+        />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen
+          name="EditEvent"
+          component={ModalScreen}
+          options={({ navigation, route }) => {
+            const { state, goBack } = navigation;
+            return {
+              title: 'Sửa sự kiện',
+              headerLeft: () => (
+                <TouchableOpacity onPress={() => goBack()}>
+                  <Text
+                    style={{ color: 'red', fontSize: 18, fontWeight: '400' }}
+                  >
+                    Hủy
+                  </Text>
+                </TouchableOpacity>
+              ),
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={() => handleUpdateEventForm(navigation)}
+                >
+                  <Text
+                    style={{ color: 'red', fontSize: 18, fontWeight: '400' }}
+                  >
+                    Xong
                   </Text>
                 </TouchableOpacity>
               ),
@@ -145,3 +234,14 @@ function BottomTabNavigator() {
     </BottomTab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 16,
+    color: 'red',
+  },
+});

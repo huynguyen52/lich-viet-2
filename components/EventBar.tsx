@@ -2,11 +2,14 @@ import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
 function EventBar(props: any) {
-  const { color, event, time = 'cả ngày' } = props;
+  const { color, event, time = 'cả ngày', onPress, style, borderLeft } = props;
   return (
-    <TouchableOpacity style={styles.eventBar}>
+    <TouchableOpacity
+      style={{ ...styles.eventBar, ...style }}
+      onPress={onPress}
+    >
       <View style={styles.container}>
-        <BorderLeftBar color={color} />
+        {borderLeft && <BorderLeftBar color={color} />}
         <Text style={styles.event}>{event}</Text>
         <Text style={styles.time}>{time}</Text>
       </View>

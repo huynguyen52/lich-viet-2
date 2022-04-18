@@ -17,7 +17,9 @@ interface DatePickerShow {
 }
 
 function DateTimePicker(props: any) {
-  const { dateTimePickerValue, onDatePickerChange } = props;
+  const { onDatePickerChange, inputForm } = props;
+  const { dateTimePickerValue } = inputForm;
+  const { isAllDay } = inputForm;
 
   const [isDatePickerShow, setIsDatePickerShow] = useState<DatePickerShow>(
     {} as DatePickerShow
@@ -60,17 +62,13 @@ function DateTimePicker(props: any) {
     }
   };
 
-  const handleChange = (e: any, date: any) => {
-    console.log(e);
-    console.log(date);
-  };
-
   return (
     <>
       <View style={styles.row}>
-        <Text style={styles.text}> Bắt đầu</Text>
+        <Text style={styles.text}>Bắt đầu</Text>
         <TouchableOpacity
           onPress={() => toggleDatePickerShow(typeDatePicker.START_TIME)}
+          style={{ display: isAllDay ? 'none' : 'flex' }}
         >
           <Text style={styles.picker}>
             {getTime(dateTimePickerValue.startTime)}
@@ -96,7 +94,7 @@ function DateTimePicker(props: any) {
           value={dateTimePickerValue.startDate}
           mode="date"
           display="inline"
-          onChange={handleChange}
+          onChange={(e, date) => onDatePickerChange(e, date, 'startDate')}
         />
       </View>
       <View
@@ -111,12 +109,16 @@ function DateTimePicker(props: any) {
           value={dateTimePickerValue.startTime}
           mode="time"
           display="spinner"
+          onChange={(e: any, date: any) =>
+            onDatePickerChange(e, date, 'startTime')
+          }
         />
       </View>
       <View style={styles.row}>
         <Text style={styles.text}>Kết thúc</Text>
         <TouchableOpacity
           onPress={() => toggleDatePickerShow(typeDatePicker.END_TIME)}
+          style={{ display: isAllDay ? 'none' : 'flex' }}
         >
           <Text style={styles.picker}>
             {getTime(dateTimePickerValue.endTime)}
@@ -142,6 +144,9 @@ function DateTimePicker(props: any) {
           value={dateTimePickerValue.endDate}
           mode="date"
           display="inline"
+          onChange={(e: any, date: any) =>
+            onDatePickerChange(e, date, 'endDate')
+          }
         />
       </View>
       <View
@@ -155,6 +160,9 @@ function DateTimePicker(props: any) {
           testID="dateTimePicker"
           value={dateTimePickerValue.endTime}
           mode="time"
+          onChange={(e: any, date: any) =>
+            onDatePickerChange(e, date, 'endTime')
+          }
           display="spinner"
         />
       </View>
