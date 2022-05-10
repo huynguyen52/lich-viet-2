@@ -17,6 +17,7 @@ import { randstr } from '../utils';
 import EventDetail from '../screens/EventDetail';
 import { db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore/lite';
+import Zodiac from '../screens/Zodiac';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<any>();
@@ -56,6 +57,30 @@ function RootNavigator() {
         name="NotFound"
         component={NotFoundScreen}
         options={{ title: 'Oops!' }}
+      />
+      <Stack.Screen
+        name="Zodiac"
+        component={Zodiac}
+        options={() => {
+          return {
+            title: 'Chọn ngày sinh nhật',
+            headerTitleStyle: {
+              color: '#fff'
+            },
+            headerRight: () => (
+              <TouchableOpacity
+                
+              >
+                <MaterialCommunityIcons
+                  name="check"
+                  color={'#ccc'}
+                  size={28}
+                />
+              </TouchableOpacity>
+            ),
+            headerTransparent: true
+          }
+        }}
       />
       <Stack.Screen
         name="EventDetail"
