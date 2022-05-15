@@ -154,6 +154,7 @@ function Modal(props: any) {
             <View style={{ ...styles.card, marginBottom: 32 }}>
               <View style={styles.cardContent}>
                 <TextInput
+                  placeholderTextColor={'#aaa'}
                   style={{ ...styles.input, borderBottomWidth: 1 }}
                   placeholder="Tiêu đề "
                   value={inputForm.title}
@@ -165,6 +166,7 @@ function Modal(props: any) {
                   style={styles.input}
                   value={inputForm.location}
                   placeholder="Vị trí "
+                  placeholderTextColor={'#aaa'}
                   onChangeText={(text) =>
                     setInputForm({ ...inputForm, location: text })
                   }
@@ -198,6 +200,7 @@ function Modal(props: any) {
                 <TextInput
                   style={{ ...styles.input, minHeight: 200 }}
                   placeholder="Ghi chú"
+                  placeholderTextColor={'#aaa'}
                   multiline={true}
                   numberOfLines={4}
                   value={inputForm.textAre}

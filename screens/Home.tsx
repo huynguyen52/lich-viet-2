@@ -1,11 +1,13 @@
 import { collection, getDocs } from 'firebase/firestore/lite';
 import React, { useEffect } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, ImageBackground, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import CalendarComponent from '../components/Calendar';
 import EventBar from '../components/EventBar';
 import { db } from '../firebase';
 import { setEventList } from '../redux/actions/eventActions';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 
 function Home(props: any) {
   const { navigation } = props;
@@ -51,7 +53,10 @@ function Home(props: any) {
       <CalendarComponent />
       <View style={styles.eventBarContainer}>
         <FlatList
-          contentContainerStyle={{ paddingHorizontal: 15, paddingVertical: 8 }}
+          contentContainerStyle={{
+            paddingHorizontal: 15,
+            paddingVertical: 8,
+          }}
           data={dailyEvents}
           renderItem={({ item }) => (
             <EventBar
@@ -86,6 +91,10 @@ const FlatListItemSeparator = () => {
 
 const styles = StyleSheet.create({
   eventBarContainer: {},
+  background: {
+    flex: 1,
+    width: '100%',
+  },
 });
 
 export default Home;

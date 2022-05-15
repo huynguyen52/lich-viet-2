@@ -10,19 +10,19 @@ export const data = {
       id: 2,
       month: 2,
       monthStr: 'Tháng 2',
-      image: require('./assets/images/bg2.png'),
+      image: require('./assets/images/sharon-mccutcheon-62vi3TG5EDg-unsplash.jpg'),
     },
     {
       id: 3,
       month: 3,
       monthStr: 'Tháng 3',
-      image: require('./assets/images/b3.png'),
+      image: require('./assets/images/mymind-wHJ5L9KGTl4-unsplash.jpg'),
     },
     {
       id: 4,
       month: 4,
       monthStr: 'Tháng 4',
-      image: require('./assets/images/bg4.png'),
+      image: require('./assets/images/richard-horvath-_nWaeTF6qo0-unsplash.jpg'),
     },
     {
       id: 5,
@@ -34,13 +34,13 @@ export const data = {
       id: 6,
       month: 6,
       monthStr: 'Tháng 6',
-      image: require('./assets/images/bg6.png'),
+      image: require('./assets/images/pawel-czerwinski-8uZPynIu-rQ-unsplash.jpg'),
     },
     {
       id: 7,
       month: 7,
       monthStr: 'Tháng 7',
-      image: require('./assets/images/bg7.png'),
+      image: require('./assets/images/jr-korpa-SFT9G3pAxLY-unsplash.jpg'),
     },
     {
       id: 8,
@@ -52,7 +52,7 @@ export const data = {
       id: 9,
       month: 9,
       monthStr: 'Tháng 9',
-      image: require('./assets/images/bg9.png'),
+      image: require('./assets/images/mohammad-alizade-XgeZu2jBaVI-unsplash.jpg'),
     },
     {
       id: 10,
@@ -64,7 +64,7 @@ export const data = {
       id: 11,
       month: 11,
       monthStr: 'Tháng 11',
-      image: require('./assets/images/bg11.png'),
+      image: require('./assets/images/sean-sinclair-C_NJKfnTR5A-unsplash.jpg'),
     },
     {
       id: 12,

@@ -7,6 +7,7 @@ import {
   updateDailyEvent,
 } from '../redux/actions/eventActions';
 import { formatDate2, formatTime, INITIAL_DATE, randstr } from '../utils';
+import { getLunarDate } from '../utils/amlich-hnd';
 import { getSolarDateEvent } from '../utils/solarHoliday';
 
 LocaleConfig.locales['vi'] = {
@@ -73,16 +74,21 @@ function CalendarComponent() {
   }, []);
 
   useEffect(() => {
+    console.log(selectedDate);
     const dateSelected = getSolarDateEvent(
       `${selectedDate.day}-${selectedDate.month}`
     );
-
+    const lunarDate = getLunarDate(
+      selectedDate.day,
+      selectedDate.month,
+      selectedDate.year
+    );
     //Show ngày click
     const dailyEvent = [
       {
         id: randstr(),
         color: COLOR_LIST[Math.floor(Math.random() * COLOR_LIST.length)],
-        title: `${selectedDate.day}/${selectedDate.month}`,
+        title: `${lunarDate.day}/${lunarDate.month}`,
         time: 'cả ngày',
       },
     ];

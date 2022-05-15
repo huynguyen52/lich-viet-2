@@ -7,34 +7,59 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import GestureRecognizer from 'react-native-swipe-gestures';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getDayOfWeek } from '../utils';
 import { getDayName, getLunarDate } from '../utils/amlich-hnd';
 
-
-function Daily() {
+function Daily(props: any) {
   const [today, setToday] = useState(new Date());
   const [showToday, setShowToday] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [clock, setClock] = useState(new Date());
   const [quotesList, setQuotesList] = useState([]);
   const [quote, setQuote] = useState<any>({});
+  const [temperature, setTemperature] = useState(0);
+
+  const { navigation } = props;
 
   useEffect(() => {
     fetchData2();
   }, []);
 
-  function getRandomQuote (arr: any) {
-    return arr[Math.floor((Math.random()*arr.length))];
+  useEffect(() => {
+    const params = {
+      access_key: 'a979e9ce79e5469be8c8489c8d33ed8a',
+      query: 'Ho Chi Minh',
+    };
+    axios
+      .get('http://api.weatherstack.com/current', { params })
+      .then((response) => {
+        if (!response.data.error) {
+          const apiResponse = response.data;
+          setTemperature(apiResponse.current.temperature);
+        } else {
+          console.log(
+            `Response error: code: ${response.data.error.code}, info: ${response.data.error.info}`
+          );
+        }
+      })
+      .catch((error) => {
+        console.error('An error occurred: ', error);
+      });
+  }, []);
+
+  function getRandomQuote(arr: any) {
+    return arr[Math.floor(Math.random() * arr.length)];
   }
 
   useEffect(() => {
-    if(quotesList.length !== 0){
+    if (quotesList.length !== 0) {
       setQuote(getRandomQuote(quotesList));
     }
-  },[quotesList])
+  }, [quotesList]);
 
   useEffect(() => {
     const clockInterval = setInterval(() => {
@@ -53,16 +78,15 @@ function Daily() {
       : setShowToday(true);
   }, [today]);
 
-
   const fetchData2 = async () => {
     const url = 'https://type.fit/api/quotes';
-    const data = await axios.get(url).then(res => res.data);
-    data.map((item:any) => ({
-     text: item.text,
-     author: item.author
-    }))
+    const data = await axios.get(url).then((res) => res.data);
+    data.map((item: any) => ({
+      text: item.text,
+      author: item.author,
+    }));
     setQuotesList(data);
-  }
+  };
 
   const onSwipeUp = (state: any) => {
     setQuote(getRandomQuote(quotesList));
@@ -89,6 +113,10 @@ function Daily() {
     setToday(date);
   };
 
+  const handleAddEvent = () => {
+    navigation.navigate('Modal');
+  };
+
   return (
     <GestureRecognizer
       onSwipeUp={onSwipeUp}
@@ -102,24 +130,23 @@ function Daily() {
         <View style={styles.content}>
           <ImageBackground
             style={styles.background}
-            source={require('../assets/images/bg13.png')}
+            source={require('../assets/images/mymind-XUlsF9LYeVk-unsplash.jpg')}
           >
             <View style={styles.contentTop}>
               <Text style={styles.day}>{today.getDate()}</Text>
-              <Text style={styles.weekdays}>THỨ HAI</Text>
+              <Text style={styles.weekdays}>{getDayOfWeek(today)}</Text>
             </View>
             <View style={styles.contentBottom}>
               {quotesList.length === 0 ? (
                 <Text>Loading....</Text>
-              ) : 
-              (
+              ) : (
                 <View>
                   <Text style={styles.quote}>{quote.text}</Text>
-                  <Text style={styles.author}>{quote.author ? quote.author : 'Anonymous'}</Text>
+                  <Text style={styles.author}>
+                    {quote.author ? quote.author : 'Anonymous'}
+                  </Text>
                 </View>
-              )
-              
-              }
+              )}
             </View>
           </ImageBackground>
         </View>
@@ -131,7 +158,7 @@ function Daily() {
                 color={'#43919B'}
                 size={28}
               />
-              <Text style={styles.subTitle}>20°</Text>
+              <Text style={styles.subTitle}>{temperature}°</Text>
               <Text>Hồ Chí Minh</Text>
             </View>
             <View style={styles.col}>
@@ -217,16 +244,18 @@ function Daily() {
         >
           <Text style={styles.todayActiveText}>Hôm nay</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.add} onPress={handleAddEvent}>
+          <MaterialCommunityIcons name="plus" color={'#001D6E'} size={28} />
+        </TouchableOpacity>
         <RNDateTimePicker
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             width: '100%',
-            
+
             backgroundColor: '#fff',
             display: `${showDatePicker ? 'flex' : 'none'}`,
-            
           }}
           textColor="#000"
           testID="dateTimePicker"
@@ -243,6 +272,14 @@ function Daily() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  add: {
+    position: 'absolute',
+    top: 20,
+    right: 30,
+    backgroundColor: '#ccc',
+    padding: 4,
+    borderRadius: 50,
   },
   pickDay: {
     position: 'absolute',
@@ -265,6 +302,7 @@ const styles = StyleSheet.create({
   },
   pickDayText: {
     fontSize: 16,
+    color: '#001D6E',
   },
   todayActive: {
     position: 'absolute',
@@ -286,6 +324,7 @@ const styles = StyleSheet.create({
   },
   todayActiveText: {
     fontSize: 16,
+    color: '#001D6E',
   },
   content: {
     flex: 1,

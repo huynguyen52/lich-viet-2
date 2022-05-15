@@ -13,11 +13,14 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { addEventForm, updateEvent } from '../redux/actions/eventActions';
-import { randstr } from '../utils';
+import { formatDate, getDayOfWeek, randstr } from '../utils';
 import EventDetail from '../screens/EventDetail';
 import { db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore/lite';
 import Zodiac from '../screens/Zodiac';
+import { toggleShowZodiac } from '../redux/actions/zodiacActions';
+import { useEffect } from 'react';
+import { toggleYear } from '../redux/actions/yearsActions';
 
 const BottomTab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<any>();
@@ -35,6 +38,8 @@ function RootNavigator() {
   const formValue = useSelector((state: any) => state.event.formValue);
   const selectedDate = useSelector((state: any) => state.event.selectedDate);
   const eventList = useSelector((state: any) => state.event.eventList);
+  const isZodiacShow = useSelector((state: any) => state.zodiac.isZodiacShow);
+  const choosenDate = useSelector((state: any) => state.zodiac.date);
 
   const handleAddEventForm = (goBack: any) => {
     formValue && dispatch(addEventForm({ id: randstr(), ...formValue }));
@@ -44,6 +49,10 @@ function RootNavigator() {
   const handleUpdateEventForm = async (navigation: any) => {
     formValue && dispatch(updateEvent(formValue));
     navigation.navigate('Home');
+  };
+
+  const onToggleShowZodiac = () => {
+    dispatch(toggleShowZodiac(!isZodiacShow));
   };
 
   return (
@@ -63,23 +72,31 @@ function RootNavigator() {
         component={Zodiac}
         options={() => {
           return {
-            title: 'Chọn ngày sinh nhật',
+            title: isZodiacShow
+              ? 'Chọn ngày sinh nhật'
+              : `${getDayOfWeek(choosenDate)}, ${formatDate(choosenDate, '/')}`,
             headerTitleStyle: {
-              color: '#fff'
+              color: '#fff',
             },
             headerRight: () => (
-              <TouchableOpacity
-                
-              >
-                <MaterialCommunityIcons
-                  name="check"
-                  color={'#ccc'}
-                  size={28}
-                />
+              <TouchableOpacity onPress={onToggleShowZodiac}>
+                {isZodiacShow ? (
+                  <MaterialCommunityIcons
+                    name="check"
+                    color={'#ccc'}
+                    size={28}
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    name="cake"
+                    color={'#ccc'}
+                    size={28}
+                  />
+                )}
               </TouchableOpacity>
             ),
-            headerTransparent: true
-          }
+            headerTransparent: true,
+          };
         }}
       />
       <Stack.Screen
@@ -186,6 +203,12 @@ function RootNavigator() {
 }
 
 function BottomTabNavigator() {
+  const dispatch = useDispatch();
+  const year = useSelector((state: any) => state.year.year);
+  const handleToggleShowYear = () => {
+    dispatch(toggleYear());
+  };
+
   return (
     <BottomTab.Navigator initialRouteName="Home">
       <BottomTab.Screen
@@ -227,12 +250,21 @@ function BottomTabNavigator() {
         component={EventsScreen}
         options={{
           title: 'Sự kiện',
+
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="bookmark-outline"
               color={color}
               size={size}
             />
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styles.year}
+              onPress={handleToggleShowYear}
+            >
+              <Text style={styles.yearText}>Năm - {year.getFullYear()}</Text>
+            </TouchableOpacity>
           ),
         }}
       />
@@ -268,5 +300,16 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 16,
     color: 'red',
+  },
+  year: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 100,
+    backgroundColor: '#ccc',
+    marginLeft: 18,
+  },
+  yearText: {
+    color: '#2155CD',
+    fontSize: 16,
   },
 });

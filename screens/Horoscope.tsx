@@ -1,98 +1,111 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Tử vi
 function Horoscope(props: any) {
-  const {navigation} = props;
+  const { navigation } = props;
 
   const services = [
     {
       id: 1,
       image: require('../assets/images/nhamdan.jpg'),
       title: 'Tử vi 2022',
-      url: 'tu-vi-2022'
+      url: 'tu-vi-2022',
     },
     {
       id: 2,
       image: require('../assets/images/yin-yang.png'),
       title: 'Tử vi hằng ngày',
-      url: 'tu-vi-hang-ngay'
+      url: 'tu-vi-hang-ngay',
     },
     {
       id: 3,
       image: require('../assets/images/cau-doi-tet.jpg'),
       title: 'Tử Vi Trọn Đời',
-      url: 'tu-vi-tron-doi'
+      url: 'tu-vi-tron-doi',
     },
     {
       id: 4,
       image: require('../assets/images/moon-and-stars.png'),
       title: '12 Cung Hoàng Đạo',
-      url: 'cung-hoang-dao'
+      url: 'cung-hoang-dao',
     },
     {
       id: 5,
       image: require('../assets/images/star.png'),
       title: 'Xem sao',
-      url: 'xem-sao'
+      url: 'xem-sao',
     },
     {
       id: 6,
       image: require('../assets/images/love.png'),
       title: 'Bói Tình Duyên',
-      url: 'boi-tinh-duyen'
+      url: 'boi-tinh-duyen',
     },
     {
       id: 7,
       image: require('../assets/images/open-hands.png'),
       title: 'Văn Khấn',
-      url: 'van-khan'
+      url: 'van-khan',
     },
     {
       id: 8,
       image: require('../assets/images/heart.png'),
       title: 'Nhịp sinh học',
-      url: 'nhip-sinh-hoc'
+      url: 'nhip-sinh-hoc',
     },
     {
       id: 9,
       image: require('../assets/images/compass.png'),
       title: 'La bàn',
-      url: 'la-ban'
+      url: 'la-ban',
     },
     {
       id: 10,
       image: require('../assets/images/ruler.png'),
       title: 'Thước lỗ ban',
-      url: 'thuoc-lo-ban'
+      url: 'thuoc-lo-ban',
     },
     {
       id: 11,
       image: require('../assets/images/half-moon.png'),
       title: 'Giải mộng',
-      url: 'giai-mong'
+      url: 'giai-mong',
     },
     {
       id: 12,
       image: require('../assets/images/stopwatch.png'),
       title: 'Đổi ngày',
-      url: 'doi-ngay'
+      url: 'doi-ngay',
     },
-  ]
+  ];
 
   const handleRedirect = (url: string) => {
     navigation.navigate('Zodiac');
-  }
+  };
+
+  const handleAddEvent = () => {
+    navigation.navigate('Modal');
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.row}>
-
-      {services.map(item => <TouchableOpacity key={item.id} style={styles.item} onPress={() => handleRedirect(item.url)}>
-        <Image source={item.image} style={styles.image}/>
-        <Text style={styles.title}>{item.title}</Text>
-      </TouchableOpacity>)}
+        {services.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={styles.item}
+            onPress={() => handleRedirect(item.url)}
+          >
+            <Image source={item.image} style={styles.image} />
+            <Text style={styles.title}>{item.title}</Text>
+          </TouchableOpacity>
+        ))}
       </View>
+      <TouchableOpacity style={styles.add} onPress={handleAddEvent}>
+        <MaterialCommunityIcons name="plus" color={'white'} size={52} />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -103,28 +116,35 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     paddingHorizontal: 14,
-    paddingVertical: 14
+    paddingVertical: 14,
   },
-  row:{
-    flexDirection:"row",
+  add: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    padding: 0,
+    borderRadius: 50,
+    backgroundColor: '#F9D923',
+  },
+  row: {
+    flexDirection: 'row',
     flexWrap: 'wrap',
-    marginTop: 48
-    
+    marginTop: 48,
   },
-  item:{
+  item: {
     width: '25%',
     alignItems: 'center',
-    marginBottom: 24
+    marginBottom: 24,
   },
   image: {
     width: 36,
     height: 36,
-    borderRadius: 14
+    borderRadius: 14,
   },
-  title:{
+  title: {
     textAlign: 'center',
-    marginTop: 12
-  }
-})
+    marginTop: 12,
+  },
+});
 
 export default Horoscope;

@@ -12,6 +12,10 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { LogBox } from 'react-native';
 import { data } from '../data';
 import { getLunarDate, daysInMonth } from '../utils/amlich-hnd';
+import DateTimePicker from '../components/DateTimePicker';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeYear } from '../redux/actions/yearsActions';
 
 const listEvents = [];
 
@@ -34,14 +38,18 @@ interface MonthEventType {
   month: number;
 }
 
-function Events() {
+function Events(props: any) {
   const { solarHoliday, lunarHoliday, month } = data;
 
   const [monthEvents, setmonthEvents] = useState([] as MonthEventType[]);
+  const { navigation } = props;
+  const year = useSelector((state: any) => state.year.year);
+  const isShowYear = useSelector((state: any) => state.year.isShowYear);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const test = solarHoliday.map((item, idx) => {
-      const days = daysInMonth(item.month, 2022);
+      const days = daysInMonth(item.month, year.getFullYear());
       let day: number;
       const events = [];
 
@@ -54,7 +62,7 @@ function Events() {
               isLunar: false,
             };
           });
-        const lunarDay = getLunarDate(day, item.month, 2022);
+        const lunarDay = getLunarDate(day, item.month, year.getFullYear());
         const sth2: any = lunarHoliday
           .find((e) => e.month === lunarDay.month)
           ?.events.filter((e) => e.date === lunarDay.day)
@@ -79,11 +87,19 @@ function Events() {
       };
     });
     setmonthEvents(test);
-  }, []);
+  }, [year]);
 
   useEffect(() => {
     LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
   }, []);
+
+  const handleAddEvent = () => {
+    navigation.navigate('Modal');
+  };
+
+  const onDatePickerChange = (e: Event, date: Date) => {
+    dispatch(changeYear(date));
+  };
 
   if (monthEvents[0] !== undefined) {
     return (
@@ -93,7 +109,9 @@ function Events() {
             <View key={item.id} style={styles.widget}>
               <View style={styles.month}>
                 <ImageBackground style={styles.background} source={item.image}>
-                  <Text style={styles.monthText}>{item.monthStr} - 2022</Text>
+                  <Text style={styles.monthText}>
+                    {item.monthStr} - {year.getFullYear()}
+                  </Text>
                 </ImageBackground>
               </View>
               <View style={styles.content}>
@@ -137,6 +155,25 @@ function Events() {
             </View>
           ))}
         </ScrollView>
+        <TouchableOpacity style={styles.add} onPress={handleAddEvent}>
+          <MaterialCommunityIcons name="plus" color={'white'} size={53} />
+        </TouchableOpacity>
+        <RNDateTimePicker
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            backgroundColor: '#fff',
+            display: `${isShowYear ? 'flex' : 'none'}`,
+          }}
+          textColor="#000"
+          testID="dateTimePicker"
+          value={year}
+          mode="date"
+          display="spinner"
+          onChange={(e: any, date: any) => onDatePickerChange(e, date)}
+        />
       </View>
     );
   }
@@ -166,9 +203,18 @@ const styles = StyleSheet.create({
   month: {
     height: 80,
   },
+  add: {
+    position: 'absolute',
+    right: 20,
+    bottom: 20,
+    padding: 0,
+    borderRadius: 50,
+    backgroundColor: '#F9D923',
+  },
   monthText: {
-    color: '#000',
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '500',
   },
   background: {
     flex: 1,

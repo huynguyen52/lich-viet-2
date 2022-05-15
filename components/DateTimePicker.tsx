@@ -90,10 +90,12 @@ function DateTimePicker(props: any) {
         }}
       >
         <RNDateTimePicker
+          themeVariant="light"
           testID="dateTimePicker"
           value={dateTimePickerValue.startDate}
           mode="date"
           display="inline"
+          textColor="#000"
           onChange={(e, date) => onDatePickerChange(e, date, 'startDate')}
         />
       </View>
@@ -109,6 +111,7 @@ function DateTimePicker(props: any) {
           value={dateTimePickerValue.startTime}
           mode="time"
           display="spinner"
+          textColor="#000"
           onChange={(e: any, date: any) =>
             onDatePickerChange(e, date, 'startTime')
           }
@@ -141,9 +144,11 @@ function DateTimePicker(props: any) {
       >
         <RNDateTimePicker
           testID="dateTimePicker"
+          themeVariant="light"
           value={dateTimePickerValue.endDate}
           mode="date"
           display="inline"
+          textColor="#000"
           onChange={(e: any, date: any) =>
             onDatePickerChange(e, date, 'endDate')
           }
@@ -160,6 +165,7 @@ function DateTimePicker(props: any) {
           testID="dateTimePicker"
           value={dateTimePickerValue.endTime}
           mode="time"
+          textColor="#000"
           onChange={(e: any, date: any) =>
             onDatePickerChange(e, date, 'endTime')
           }

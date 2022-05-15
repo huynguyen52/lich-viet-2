@@ -34,3 +34,24 @@ export const INITIAL_DATE = {
   year: NEW_DATE.getFullYear(),
   timestamp: NEW_DATE.getTime(),
 };
+
+export const getDayOfWeek = (date: Date) => {
+  switch (date.getDay()) {
+    case 0:
+      return 'CHỦ NHẬT';
+    case 1:
+      return 'THỨ HAI';
+    case 2:
+      return 'THỨ BA';
+    case 3:
+      return 'THỨ TƯ';
+    case 4:
+      return 'THỨ NĂM';
+    case 5:
+      return 'THỨ SÁU';
+    case 6:
+      return 'THỨ BẢY';
+    default:
+      return undefined;
+  }
+};

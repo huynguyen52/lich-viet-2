@@ -7,3 +7,11 @@ export const CHANGE_SELECTED_DATE = 'CHANGE_SELECTED_DATE';
 export const SET_EVENT_LIST = 'SET_EVENT_LIST';
 export const DELETE_EVENT = 'DELETE_EVENT';
 export const UPDATE_EVENT = 'UPDATE_EVENT';
+
+//Zodiac
+export const TOGGLE_SHOW_ZODIAC = 'TOGGLE_SHOW_ZODIAC';
+export const SET_DATE = 'SET_DATE';
+
+//Years
+export const CHANGE_YEAR = 'CHANGE_YEAR';
+export const TOGGLE_YEAR = 'TOGGLE_YEAR';
