@@ -98,9 +98,11 @@ function Daily(props: any) {
     setToday(new Date(today.setMonth(today.getMonth() - 1)));
   };
   const onSwipeLeft = (state: any) => {
+    setQuote(getRandomQuote(quotesList));
     setToday(new Date(today.getTime() + 24 * 60 * 60 * 1000));
   };
   const onSwipeRight = (state: any) => {
+    setQuote(getRandomQuote(quotesList));
     setToday(new Date(today.getTime() - 24 * 60 * 60 * 1000));
   };
 
