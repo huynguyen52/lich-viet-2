@@ -12,11 +12,14 @@
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-native-community/datetimepicker": "4.0.0",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/slider": "^4.2.2",
     "@react-native-masked-view/masked-view": "^0.2.6",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "@react-navigation/stack": "^6.1.1",
+    "@types/react-native-snap-carousel": "^3.8.5",
+    "axios": "^0.26.1",
     "expo": "~44.0.0",
     "expo-dev-client": "^0.8.4",
     "expo-status-bar": "~1.2.0",
@@ -31,12 +34,19 @@
     "react-native-push-notification": "^8.1.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
+    "react-native-snap-carousel": "^3.9.1",
+    "react-native-swipe-gestures": "^1.0.5",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1",
     "react-redux": "^7.2.6",
     "redux": "^4.1.2",
     "redux-thunk": "^2.4.1",
+<<<<<<< HEAD
     "expo-splash-screen": "~0.14.1"
+=======
+    "expo-notifications": "~0.14.0",
+    "expo-device": "~4.1.0"
+>>>>>>> 7a1adf770ada3752c19f28077509d24878dafa28
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
