@@ -1,3 +1,17 @@
 export const USER_STATE_CHANGE = 'USER_STATE_CHANGE';
-export const ADD_EVENT = 'ADD_EVENT';
-export const CHANGE_EVENT = 'CHANGE_EVENT';
+export const ADD_DAILY_EVENT = 'ADD_DAILY_EVENT';
+export const UPDATE_DAILY_EVENT = 'UPDATENGE_DAILY_EVENT';
+export const SET_FORMVALUES = 'SET_FORMVALUES';
+export const ADD_EVENT_FORM = 'ADD_EVENT_FORM';
+export const CHANGE_SELECTED_DATE = 'CHANGE_SELECTED_DATE';
+export const SET_EVENT_LIST = 'SET_EVENT_LIST';
+export const DELETE_EVENT = 'DELETE_EVENT';
+export const UPDATE_EVENT = 'UPDATE_EVENT';
+
+//Zodiac
+export const TOGGLE_SHOW_ZODIAC = 'TOGGLE_SHOW_ZODIAC';
+export const SET_DATE = 'SET_DATE';
+
+//Years
+export const CHANGE_YEAR = 'CHANGE_YEAR';
+export const TOGGLE_YEAR = 'TOGGLE_YEAR';
