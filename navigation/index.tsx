@@ -22,6 +22,8 @@ import { toggleShowZodiac } from '../redux/actions/zodiacActions';
 import { useEffect } from 'react';
 import { toggleYear } from '../redux/actions/yearsActions';
 
+import PushNotification from 'react-native-push-notification';
+
 const BottomTab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<any>();
 
@@ -33,7 +35,17 @@ export default function Navigation() {
   );
 }
 
+function createChanel(){
+  PushNotification.createChannel({
+    channelId: "test-noti",
+    channelName: "test noti"
+  }, (created) => {})
+}
+
 function RootNavigator() {
+  createChanel();
+
+
   const dispatch = useDispatch();
   const formValue = useSelector((state: any) => state.event.formValue);
   const selectedDate = useSelector((state: any) => state.event.selectedDate);
@@ -43,6 +55,8 @@ function RootNavigator() {
 
   const handleAddEventForm = (goBack: any) => {
     formValue && dispatch(addEventForm({ id: randstr(), ...formValue }));
+
+    console.log("formValue", formValue)
     goBack();
   };
 
